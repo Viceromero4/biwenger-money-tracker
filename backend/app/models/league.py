@@ -1,6 +1,13 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, String, func
+from sqlalchemy import (
+    BigInteger,
+    DateTime,
+    ForeignKey,
+    String,
+    UniqueConstraint,
+    func,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -9,15 +16,42 @@ from app.db.base import Base
 class League(Base):
     __tablename__ = "leagues"
 
+    __table_args__ = (
+        UniqueConstraint(
+            "season_id",
+            "name",
+            name="uq_leagues_season_id_name",
+        ),
+    )
+
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(100), nullable=False)
+
+    season_id: Mapped[int] = mapped_column(
+        ForeignKey("seasons.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+
+    name: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    initial_balance: Mapped[int] = mapped_column(
+        BigInteger,
+        nullable=False,
+    )
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
         nullable=False,
     )
 
-    seasons: Mapped[list["Season"]] = relationship(
+    season: Mapped["Season"] = relationship(
+        back_populates="leagues",
+    )
+
+    participants: Mapped[list["LeagueParticipant"]] = relationship(
         back_populates="league",
         cascade="all, delete-orphan",
     )

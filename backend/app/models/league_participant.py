@@ -6,21 +6,21 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base
 
 
-class SeasonParticipant(Base):
-    __tablename__ = "season_participants"
+class LeagueParticipant(Base):
+    __tablename__ = "league_participants"
 
     __table_args__ = (
         UniqueConstraint(
-            "season_id",
+            "league_id",
             "participant_id",
-            name="uq_season_participants_season_id_participant_id",
+            name="uq_league_participants_league_id_participant_id",
         ),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    season_id: Mapped[int] = mapped_column(
-        ForeignKey("seasons.id", ondelete="CASCADE"),
+    league_id: Mapped[int] = mapped_column(
+        ForeignKey("leagues.id", ondelete="CASCADE"),
         nullable=False,
     )
 
@@ -35,15 +35,15 @@ class SeasonParticipant(Base):
         nullable=False,
     )
 
-    season: Mapped["Season"] = relationship(
+    league: Mapped["League"] = relationship(
         back_populates="participants",
     )
 
     participant: Mapped["Participant"] = relationship(
-        back_populates="season_participations",
+        back_populates="league_participations",
     )
 
     movements: Mapped[list["Movement"]] = relationship(
-    back_populates="season_participant",
-    cascade="all, delete-orphan",
-)
+        back_populates="league_participant",
+        cascade="all, delete-orphan",
+    )

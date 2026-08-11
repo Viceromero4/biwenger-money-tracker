@@ -28,8 +28,8 @@ class Movement(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    season_participant_id: Mapped[int] = mapped_column(
-        ForeignKey("season_participants.id", ondelete="CASCADE"),
+    league_participant_id: Mapped[int] = mapped_column(
+        ForeignKey("league_participants.id", ondelete="CASCADE"),
         nullable=False,
     )
 
@@ -67,6 +67,6 @@ class Movement(Base):
         nullable=False,
     )
 
-    season_participant: Mapped["SeasonParticipant"] = relationship(
+    league_participant: Mapped["LeagueParticipant"] = relationship(
         back_populates="movements",
     )

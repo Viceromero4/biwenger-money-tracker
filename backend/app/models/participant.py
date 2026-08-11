@@ -22,7 +22,7 @@ class Participant(Base):
         nullable=False,
     )
 
-    season_participations: Mapped[list["SeasonParticipant"]] = relationship(
+    league_participations: Mapped[list["LeagueParticipant"]] = relationship(
         back_populates="participant",
         cascade="all, delete-orphan",
     )
