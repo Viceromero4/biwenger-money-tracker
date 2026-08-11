@@ -3,11 +3,14 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
+from app.models.league import League
 from app.models.league_participant import LeagueParticipant
 from app.models.movement import Movement
 from app.schemas.movement import MovementCreate, MovementResponse
-from app.models.league import League
-from app.services.movement_service import create_movement
+from app.services.movement_service import (
+    create_movement as create_movement_service,
+)
+
 
 router = APIRouter(
     prefix="/movements",
@@ -35,7 +38,7 @@ def create_movement(
             detail="League participant not found",
         )
 
-    movement = create_movement(
+    movement = create_movement_service(
         db,
         league_participant=league_participant,
         movement_type=movement_data.type,
@@ -61,6 +64,7 @@ def get_movements(
     return db.scalars(
         select(Movement).order_by(Movement.occurred_at.desc())
     ).all()
+
 
 @router.get(
     "/participant/{league_participant_id}",
@@ -88,6 +92,7 @@ def get_participant_movements(
         )
         .order_by(Movement.occurred_at.desc())
     ).all()
+
 
 @router.get(
     "/league/{league_id}",
