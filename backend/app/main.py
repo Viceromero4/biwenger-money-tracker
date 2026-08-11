@@ -10,6 +10,7 @@ from app.api.league_participants import router as league_participants_router
 from app.api.movements import router as movements_router
 from app.api.balances import router as balances_router
 from app.api.transfers import router as transfers_router
+from app.api.dashboard import router as dashboard_router
 
 
 app = FastAPI(
@@ -24,6 +25,7 @@ app.include_router(league_participants_router)
 app.include_router(movements_router)
 app.include_router(balances_router)
 app.include_router(transfers_router)
+app.include_router(dashboard_router)
 @app.get("/")
 def root():
     return {
