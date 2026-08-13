@@ -1,0 +1,14 @@
+biwenger-money-tracker/
+├── backend/
+└── frontend/
+
+1. Arrancar el BACKEND
+Entras al backend: 
+.venv\Scripts\actívate
+
+Entonces arrancas FastAPI: 
+uvicorn app.main:app --reload
+
+2. Arrancar el FRONTEND
+Entras al frontend:
+npm run dev

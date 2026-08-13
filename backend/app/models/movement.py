@@ -1,6 +1,7 @@
 from datetime import datetime
 from enum import Enum
 
+
 from sqlalchemy import (
     BigInteger,
     DateTime,
@@ -23,6 +24,12 @@ class MovementType(str, Enum):
     ADJUSTMENT = "adjustment"
 
 
+class MovementOperationType(str, Enum):
+    CLAUSE = "clause"
+    PARTICIPANT_TRANSFER = "participant_transfer"
+    LOAN = "loan"
+
+
 class Movement(Base):
     __tablename__ = "movements"
 
@@ -39,6 +46,14 @@ class Movement(Base):
             name="movement_type",
         ),
         nullable=False,
+    )
+
+    operation_type: Mapped[MovementOperationType | None] = mapped_column(
+        SqlEnum(
+            MovementOperationType,
+            name="movement_operation_type",
+        ),
+        nullable=True,
     )
 
     amount: Mapped[int] = mapped_column(

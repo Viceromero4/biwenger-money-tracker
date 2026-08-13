@@ -2,6 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import DateTime, ForeignKey, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import DateTime, ForeignKey, String, UniqueConstraint, func
 
 from app.db.base import Base
 
@@ -27,6 +28,11 @@ class LeagueParticipant(Base):
     participant_id: Mapped[int] = mapped_column(
         ForeignKey("participants.id", ondelete="CASCADE"),
         nullable=False,
+    )
+
+    team_name: Mapped[str | None] = mapped_column(
+    String(150),
+    nullable=True,
     )
 
     created_at: Mapped[datetime] = mapped_column(

@@ -1,0 +1,93 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  padding: 16px 24px;
+
+  background-color: #111827;
+  color: white;
+}
+
+.navbar-brand {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar-link {
+  padding: 8px 12px;
+
+  color: #d1d5db;
+  text-decoration: none;
+
+  border-radius: 8px;
+}
+
+.navbar-link:hover {
+  background-color: #1f2937;
+  color: white;
+}
+
+.navbar-link.active {
+  background-color: #374151;
+  color: white;
+}
+
+.navbar-link-new {
+  background-color: white;
+  color: #111827;
+  font-weight: 600;
+}
+
+.navbar-link-new:hover {
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+.league-selector {
+  min-width: 185px;
+  height: 38px;
+  padding: 0 12px;
+
+  background-color: #334155;
+  color: white;
+
+  border: 1px solid #64748b;
+  border-radius: 8px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.league-selector:hover {
+  background-color: #3f4d63;
+  border-color: #94a3b8;
+}
+
+.league-selector:focus {
+  outline: none;
+
+  border-color: #cbd5e1;
+
+  box-shadow:
+    0 0 0 3px rgba(148, 163, 184, 0.15);
+}
+
+.league-selector option {
+  background-color: #334155;
+  color: white;
+}

@@ -1,0 +1,124 @@
+.league-selector-custom {
+  position: relative;
+
+  width: 190px;
+}
+
+.league-selector-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 38px;
+  padding: 0 13px;
+
+  background-color: #253247;
+  color: #ffffff;
+
+  border: 1px solid #64748b;
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.league-selector-button:hover {
+  background-color: #334155;
+  border-color: #94a3b8;
+}
+
+.league-selector-button.open {
+  background-color: #334155;
+  border-color: #94a3b8;
+
+  box-shadow:
+    0 0 0 3px rgba(148, 163, 184, 0.12);
+}
+
+.league-selector-arrow {
+  margin-left: 12px;
+
+  color: #cbd5e1;
+
+  font-size: 10px;
+
+  transition: transform 0.2s ease;
+}
+
+.league-selector-arrow.open {
+  transform: rotate(180deg);
+}
+
+.league-selector-menu {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 0;
+
+  z-index: 1000;
+
+  width: 100%;
+  padding: 6px;
+
+  background-color: #1f2937;
+
+  border: 1px solid #475569;
+  border-radius: 8px;
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.league-selector-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  padding: 9px 10px;
+
+  background: transparent;
+  color: #e5e7eb;
+
+  border: none;
+  border-radius: 6px;
+
+  font-family: inherit;
+  font-size: 14px;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.league-selector-option:hover {
+  background-color: #374151;
+  color: #ffffff;
+}
+
+.league-selector-option.selected {
+  background-color: #334155;
+  color: #ffffff;
+
+  font-weight: 600;
+}
+
+.league-selector-check {
+  margin-left: 10px;
+
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 700;
+}

@@ -55,6 +55,7 @@ def create_transfer(
         db,
         buyer=buyer,
         seller=seller,
+        operation_type=transfer_data.operation_type,
         amount=transfer_data.amount,
         player_name=transfer_data.player_name,
         description=transfer_data.description,

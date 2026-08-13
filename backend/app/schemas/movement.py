@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from app.models.movement import MovementType
+from app.models.movement import MovementType, MovementOperationType
 
 
 class MovementCreate(BaseModel):
@@ -53,6 +53,7 @@ class MovementResponse(BaseModel):
     id: int
     league_participant_id: int
     type: MovementType
+    operation_type: MovementOperationType | None
     amount: int
     player_name: str | None
     description: str | None

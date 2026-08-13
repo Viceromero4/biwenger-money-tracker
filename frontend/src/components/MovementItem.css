@@ -1,0 +1,40 @@
+.movement-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  background-color: white;
+  padding: 16px 20px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.movement-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.movement-info p {
+  margin: 0;
+}
+
+.movement-info small {
+  color: #6b7280;
+}
+
+.movement-amount {
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+.movement-income {
+  color: #15803d;
+}
+
+.movement-expense {
+  color: #dc2626;
+}

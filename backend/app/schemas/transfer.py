@@ -1,11 +1,13 @@
 from datetime import datetime
 
 from pydantic import BaseModel, model_validator
+from app.models.movement import MovementOperationType
 
 
 class PlayerTransferCreate(BaseModel):
     buyer_league_participant_id: int
     seller_league_participant_id: int
+    operation_type: MovementOperationType
     amount: int
     player_name: str
     occurred_at: datetime
