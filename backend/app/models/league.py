@@ -22,6 +22,11 @@ class League(Base):
             "name",
             name="uq_leagues_season_id_name",
         ),
+        UniqueConstraint(
+            "season_id",
+            "biwenger_league_id",
+            name="uq_leagues_season_id_biwenger_league_id",
+        ),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -39,6 +44,16 @@ class League(Base):
     initial_balance: Mapped[int] = mapped_column(
         BigInteger,
         nullable=False,
+    )
+
+    biwenger_league_id: Mapped[int | None] = mapped_column(
+        BigInteger,
+        nullable=True,
+    )
+
+    sync_from: Mapped[datetime | None] = mapped_column(
+    DateTime(timezone=True),
+    nullable=True,
     )
 
     created_at: Mapped[datetime] = mapped_column(

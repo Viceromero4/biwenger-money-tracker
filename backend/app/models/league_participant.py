@@ -1,8 +1,7 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, UniqueConstraint, func
+from sqlalchemy import BigInteger, DateTime, ForeignKey, String, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import DateTime, ForeignKey, String, UniqueConstraint, func
 
 from app.db.base import Base
 
@@ -15,6 +14,11 @@ class LeagueParticipant(Base):
             "league_id",
             "participant_id",
             name="uq_league_participants_league_id_participant_id",
+        ),
+        UniqueConstraint(
+            "league_id",
+            "biwenger_user_id",
+            name="uq_league_participants_league_id_biwenger_user_id",
         ),
     )
 
@@ -33,6 +37,11 @@ class LeagueParticipant(Base):
     team_name: Mapped[str | None] = mapped_column(
     String(150),
     nullable=True,
+    )
+
+    biwenger_user_id: Mapped[int | None] = mapped_column(
+        BigInteger,
+        nullable=True,
     )
 
     created_at: Mapped[datetime] = mapped_column(

@@ -71,6 +71,12 @@ class Movement(Base):
         nullable=True,
     )
 
+    external_key: Mapped[str | None] = mapped_column(
+    String(64),
+    nullable=True,
+    unique=True,
+    )
+
     occurred_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

@@ -8,14 +8,10 @@ from app.models.league_participant import LeagueParticipant
 from app.models.participant import Participant
 from app.schemas.league_participant import (
     LeagueParticipantCreate,
-    LeagueParticipantResponse,
-)
-from app.schemas.league_participant import (
-    LeagueParticipantCreate,
     LeagueParticipantRegister,
     LeagueParticipantResponse,
+    LeagueParticipantUpdateBiwenger,
 )
-
 
 router = APIRouter(
     prefix="/league-participants",
@@ -137,3 +133,52 @@ def get_league_participants(
     db: Session = Depends(get_db),
 ):
     return db.scalars(select(LeagueParticipant)).all()
+
+@router.patch(
+    "/{league_participant_id}/biwenger",
+    response_model=LeagueParticipantResponse,
+)
+def update_biwenger_user_id(
+    league_participant_id: int,
+    data: LeagueParticipantUpdateBiwenger,
+    db: Session = Depends(get_db),
+):
+    league_participant = db.get(
+        LeagueParticipant,
+        league_participant_id,
+    )
+
+    if league_participant is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="League participant not found",
+        )
+
+    league_participant.biwenger_user_id = data.biwenger_user_id
+
+    db.commit()
+    db.refresh(league_participant)
+
+    return league_participant
+
+@router.get(
+    "/league/{league_id}",
+    response_model=list[LeagueParticipantResponse],
+)
+def get_league_participants_by_league(
+    league_id: int,
+    db: Session = Depends(get_db),
+):
+    league = db.get(League, league_id)
+
+    if league is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="League not found",
+        )
+
+    return db.scalars(
+        select(LeagueParticipant).where(
+            LeagueParticipant.league_id == league_id
+        )
+    ).all()

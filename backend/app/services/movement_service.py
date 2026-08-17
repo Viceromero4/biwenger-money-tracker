@@ -1,18 +1,11 @@
 from sqlalchemy.orm import Session
 
 from app.models.league_participant import LeagueParticipant
-from app.models.movement import Movement, MovementType
-
-
-from sqlalchemy.orm import Session
-
-from app.models.league_participant import LeagueParticipant
 from app.models.movement import (
     Movement,
     MovementOperationType,
     MovementType,
 )
-
 
 def create_movement(
     db: Session,
@@ -24,17 +17,18 @@ def create_movement(
     description: str | None,
     occurred_at,
     operation_type: MovementOperationType | None = None,
-
+    external_key: str | None = None,
 ) -> Movement:
     movement = Movement(
-    league_participant_id=league_participant.id,
-    type=movement_type,
-    operation_type=operation_type,
-    amount=amount,
-    player_name=player_name,
-    description=description,
-    occurred_at=occurred_at,
-)
+        league_participant_id=league_participant.id,
+        type=movement_type,
+        operation_type=operation_type,
+        amount=amount,
+        player_name=player_name,
+        description=description,
+        external_key=external_key,
+        occurred_at=occurred_at,
+    )
 
     db.add(movement)
 

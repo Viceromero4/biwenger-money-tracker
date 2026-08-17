@@ -4,7 +4,11 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.models.league import League
 from app.models.season import Season
-from app.schemas.league import LeagueCreate, LeagueResponse
+from app.schemas.league import (
+    LeagueCreate,
+    LeagueResponse,
+    LeagueUpdateBiwenger,
+)
 
 
 router = APIRouter(
@@ -53,3 +57,27 @@ def get_leagues(
     leagues = db.query(League).all()
 
     return leagues
+
+@router.patch(
+    "/{league_id}/biwenger",
+    response_model=LeagueResponse,
+)
+def update_biwenger_league_id(
+    league_id: int,
+    league_data: LeagueUpdateBiwenger,
+    db: Session = Depends(get_db),
+):
+    league = db.get(League, league_id)
+
+    if league is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="League not found",
+        )
+
+    league.biwenger_league_id = league_data.biwenger_league_id
+
+    db.commit()
+    db.refresh(league)
+
+    return league

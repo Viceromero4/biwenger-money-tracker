@@ -4,15 +4,15 @@ const LeagueContext = createContext()
 
 const leagues = [
   {
-    id: 2,
+    id: 1,
     name: 'Puribet',
   },
   {
-    id: 3,
+    id: 2,
     name: 'Festeros',
   },
   {
-    id: 4,
+    id: 3,
     name: 'Segunda Puribet',
   },
 ]
