@@ -20,6 +20,7 @@ class MovementType(str, Enum):
     PURCHASE = "purchase"
     SALE = "sale"
     BONUS = "bonus"
+    ROUND_BONUS = "round_bonus"
     CLAUSE_COMPENSATION = "clause_compensation"
     ADJUSTMENT = "adjustment"
 
@@ -63,6 +64,10 @@ class Movement(Base):
 
     player_name: Mapped[str | None] = mapped_column(
         String(150),
+        nullable=True,
+    )
+
+    round_number: Mapped[int | None] = mapped_column(
         nullable=True,
     )
 

@@ -1,4 +1,7 @@
+import { Link } from 'react-router-dom'
+
 import './ParticipantCard.css'
+import { formatCurrency } from '../utils/formatCurrency.js'
 
 function ParticipantCard({
   participant,
@@ -7,30 +10,31 @@ function ParticipantCard({
   const balanceDifference =
     participant.current_balance - initialBalance
 
-  function formatMillions(amount) {
-    return `${(amount / 1000000).toFixed(2)} M €`
-  }
-
   return (
-    <article className="participant-card">
-      <h3>{participant.name}</h3>
+    <Link
+      to={`/participants/${participant.league_participant_id}`}
+      className="participant-card-link"
+    >
+      <article className="participant-card">
+        <h3>{participant.name}</h3>
 
-      <p>
-        Saldo actual: {formatMillions(participant.current_balance)}
-      </p>
+        <p>
+          Saldo actual: {formatCurrency(participant.current_balance)}
+        </p>
 
-      <p
-        className={
-          balanceDifference >= 0
-            ? 'balance-positive'
-            : 'balance-negative'
-        }
-      >
-        Variación:{' '}
-        {balanceDifference >= 0 ? '+' : ''}
-        {formatMillions(balanceDifference)}
-      </p>
-    </article>
+        <p
+          className={
+            balanceDifference >= 0
+              ? 'balance-positive'
+              : 'balance-negative'
+          }
+        >
+          Variación:{' '}
+          {balanceDifference > 0 ? '+' : ''}
+          {formatCurrency(balanceDifference)}
+        </p>
+      </article>
+    </Link>
   )
 }
 

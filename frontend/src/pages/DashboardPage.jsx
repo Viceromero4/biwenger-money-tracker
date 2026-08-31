@@ -5,10 +5,8 @@ import './DashboardPage.css'
 import { getLeagueMovements } from '../services/movementService.js'
 import MovementItem from '../components/MovementItem.jsx'
 import { useLeague } from '../context/LeagueContext.jsx'
+import { formatCurrency } from '../utils/formatCurrency.js'
 
-function formatMillions(amount) {
-  return `${(amount / 1000000).toFixed(2)} M €`
-}
 
 function DashboardPage() {
   const [dashboard, setDashboard] = useState(null)
@@ -65,7 +63,7 @@ return (
 
       <div className="summary-item">
         <span>Saldo inicial</span>
-        <strong>{formatMillions(dashboard.initial_balance)}</strong>
+        <strong>{formatCurrency(dashboard.initial_balance)}</strong>
       </div>
 
       <div className="summary-item">

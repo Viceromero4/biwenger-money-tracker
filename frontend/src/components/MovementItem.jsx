@@ -1,22 +1,11 @@
 import './MovementItem.css'
+import { formatCurrency } from '../utils/formatCurrency.js'
 
 function MovementItem({ movement, participants }) {
   const participant = participants.find(
     (participant) =>
       participant.league_participant_id === movement.league_participant_id
   )
-
-  const movementTypes = {
-    purchase: 'Compra',
-    sale: 'Venta',
-    bonus: 'Bonus',
-    adjustment: 'Ajuste',
-    clause_compensation: 'Recuperación de cláusula',
-  }
-
-  function formatMillions(amount) {
-    return `${(amount / 1000000).toFixed(2)} M €`
-  }
 
   function formatDate(date) {
     return new Date(date).toLocaleString('es-ES', {
@@ -28,32 +17,73 @@ function MovementItem({ movement, participants }) {
     })
   }
 
-    return (
-    <article className="movement-item">
-        <div className="movement-info">
-        <strong>{participant?.name ?? 'Participante desconocido'}</strong>
+  function getMovementLabel() {
+    const player = movement.player_name
+      ? ` · ${movement.player_name}`
+      : ''
 
-        <p>
-          {movement.operation_type === 'clause'
-            ? movement.type === 'purchase'
-              ? 'Clausulazo realizado'
-              : 'Clausulazo recibido'
-            : movementTypes[movement.type] ?? movement.type}
-        </p>
+    if (movement.operation_type === 'clause') {
+      return movement.type === 'purchase'
+        ? `Clausulazo realizado${player}`
+        : `Clausulazo recibido${player}`
+    }
+
+    if (movement.operation_type === 'loan') {
+      return movement.type === 'purchase'
+        ? `Cesión recibida${player}`
+        : `Cesión realizada${player}`
+    }
+
+    switch (movement.type) {
+      case 'purchase':
+        return `Compra${player}`
+
+      case 'sale':
+        return `Venta${player}`
+
+      case 'bonus':
+        return 'Bonus'
+
+      case 'round_bonus':
+        return movement.description
+          ? `Pago de jornada · ${movement.description}`
+          : 'Pago de jornada'
+
+      case 'adjustment':
+        return `Ajuste${player}`
+
+      case 'clause_compensation':
+        return `Recuperación de cláusula${player}`
+
+      default:
+        return movement.type
+    }
+  }
+
+  return (
+    <article className="movement-item">
+      <div className="movement-info">
+        <strong>
+          {participant?.name ?? 'Participante desconocido'}
+        </strong>
+
+        <p>{getMovementLabel()}</p>
 
         <small>{formatDate(movement.occurred_at)}</small>
-        </div>
+      </div>
 
-        <strong
+      <strong
         className={`movement-amount ${
-            movement.amount >= 0 ? 'movement-income' : 'movement-expense'
+          movement.amount >= 0
+            ? 'movement-income'
+            : 'movement-expense'
         }`}
-        >
+      >
         {movement.amount > 0 ? '+' : ''}
-        {formatMillions(movement.amount)}
-        </strong>
+        {formatCurrency(movement.amount)}
+      </strong>
     </article>
-    )
+  )
 }
 
 export default MovementItem

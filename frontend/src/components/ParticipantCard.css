@@ -21,3 +21,21 @@
 .balance-negative {
   color: #dc2626;
 }
+
+.participant-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.participant-card {
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.participant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}

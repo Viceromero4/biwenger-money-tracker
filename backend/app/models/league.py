@@ -52,8 +52,13 @@ class League(Base):
     )
 
     sync_from: Mapped[datetime | None] = mapped_column(
-    DateTime(timezone=True),
-    nullable=True,
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    last_synced_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
     )
 
     created_at: Mapped[datetime] = mapped_column(

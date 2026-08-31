@@ -1,4 +1,5 @@
 import hashlib
+import re
 
 
 def generate_external_key(
@@ -25,12 +26,86 @@ def generate_external_key(
         raw_key.encode("utf-8")
     ).hexdigest()
 
+def generate_round_bonus_external_key(
+    *,
+    league_biwenger_id: int,
+    round_number: int,
+    participant_biwenger_id: int,
+) -> str:
+    raw_key = (
+        f"{league_biwenger_id}|"
+        f"round_bonus|"
+        f"{round_number}|"
+        f"{participant_biwenger_id}"
+    )
+
+    return hashlib.sha256(
+        raw_key.encode("utf-8")
+    ).hexdigest()
 
 def parse_board_events(events, league_biwenger_id: int):
     parsed_movements = []
 
     for event in events:
-        if event["type"] not in ["transfer", "market", "bonus", "clauseIncrement",]:
+        if event["type"] not in [
+            "transfer",
+            "market",
+            "bonus",
+            "clauseIncrement",
+            "loan",
+            "roundFinished",
+        ]:
+            continue
+
+                # PAGO DE JORNADA
+        if event["type"] == "roundFinished":
+            content = event["content"]
+            round_data = content["round"]
+
+            round_name = round_data["name"]
+
+            match = re.search(r"(?:Jornada|Round)\s+(\d+)", round_name,re.IGNORECASE,)
+
+            if match is None:
+                continue
+
+            round_number = int(match.group(1))
+
+            for result in content.get("results", []):
+                # Hay eventos roundFinished que todavía no tienen
+                # pago económico.
+                if "bonus" not in result:
+                    continue
+
+                participant = result["user"]
+
+                external_key = generate_round_bonus_external_key(
+                    league_biwenger_id=league_biwenger_id,
+                    round_number=round_number,
+                    participant_biwenger_id=participant["id"],
+                )
+
+                reason = result.get("reason", {})
+
+                parsed_movements.append(
+                    {
+                        "movement_type": "round_bonus",
+                        "operation_type": None,
+                        "participant_biwenger_id": participant["id"],
+                        "participant_name": participant["name"],
+                        "player_biwenger_id": None,
+                        "amount": result["bonus"],
+                        "date": event["date"],
+                        "external_key": external_key,
+                        "round_number": round_number,
+                        "round_name": round_name,
+                        "points": result.get("points"),
+                        "bonus_point": reason.get("bonusPoint"),
+                        "bonus_fixed": reason.get("bonusFixed"),
+                        "step": content.get("step"),
+                    }
+                )
+
             continue
 
         for movement in event["content"]:
@@ -87,6 +162,7 @@ def parse_board_events(events, league_biwenger_id: int):
                     }
                 )
 
+            # AUMENTO DE CLÁUSULA
             elif event["type"] == "clauseIncrement":
                 participant = movement["user"]
 
@@ -110,7 +186,49 @@ def parse_board_events(events, league_biwenger_id: int):
                         "date": event["date"],
                         "external_key": external_key,
                     }
-                )    
+                )
+
+            # CESIÓN ENTRE PARTICIPANTES
+            elif event["type"] == "loan":
+                lender = movement["from"]
+                borrower = movement["to"]
+
+                lender_external_key = generate_external_key(
+                    league_biwenger_id=league_biwenger_id,
+                    event_type=event["type"],
+                    date=event["date"],
+                    player_biwenger_id=movement["player"],
+                    participant_biwenger_id=lender["id"],
+                    amount=-movement["amount"],
+                    role="lender",
+                )
+
+                borrower_external_key = generate_external_key(
+                    league_biwenger_id=league_biwenger_id,
+                    event_type=event["type"],
+                    date=event["date"],
+                    player_biwenger_id=movement["player"],
+                    participant_biwenger_id=borrower["id"],
+                    amount=movement["amount"],
+                    role="borrower",
+                )
+
+                parsed_movements.append(
+                    {
+                        "movement_type": "participant_operation",
+                        "operation_type": "loan",
+                        "from_biwenger_id": lender["id"],
+                        "from_name": lender["name"],
+                        "to_biwenger_id": borrower["id"],
+                        "to_name": borrower["name"],
+                        "player_biwenger_id": movement["player"],
+                        "amount": movement["amount"],
+                        "rounds": movement.get("rounds"),
+                        "date": event["date"],
+                        "seller_external_key": lender_external_key,
+                        "buyer_external_key": borrower_external_key,
+                    }
+                )
 
             # TRANSFERENCIAS / VENTAS / CLÁUSULAS
             elif event["type"] == "transfer":

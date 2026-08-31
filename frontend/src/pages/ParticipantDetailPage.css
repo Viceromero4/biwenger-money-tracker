@@ -1,0 +1,107 @@
+.participant-detail-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+}
+
+.participant-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+
+  margin-bottom: 36px;
+  padding: 28px 32px;
+
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+.participant-detail-label {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.participant-detail-header h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.participant-balance-card {
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.participant-balance-card span {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.participant-balance-card strong {
+  font-size: 28px;
+}
+
+.participant-balance-card small {
+  font-size: 14px;
+}
+
+.participant-movements-section {
+  margin-top: 20px;
+}
+
+.participant-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 20px;
+
+  margin-bottom: 18px;
+}
+
+.participant-section-header h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.participant-section-header p {
+  margin: 4px 0 0;
+  color: #6b7280;
+}
+
+.movements-count {
+  padding: 7px 12px;
+
+  background: white;
+  border-radius: 999px;
+  font-size: 14px;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.participant-movements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (max-width: 700px) {
+  .participant-detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .participant-balance-card {
+    align-items: flex-start;
+    min-width: auto;
+  }
+
+  .participant-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

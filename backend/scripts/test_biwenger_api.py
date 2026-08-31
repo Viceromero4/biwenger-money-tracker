@@ -11,6 +11,7 @@ try:
     )
 
     created = 0
+    updated = 0
     already_exists = 0
     participant_not_found = 0
 
@@ -19,6 +20,9 @@ try:
 
         if result["action"] == "created":
             created += 1
+
+        elif result["action"] == "updated":
+            updated += 1
 
         elif result["action"] == "already_exists":
             already_exists += 1
@@ -31,6 +35,7 @@ try:
     print("RESUMEN")
     print("=" * 60)
     print("Creados:", created)
+    print("Actualizados:", updated)
     print("Ya existentes:", already_exists)
     print("Participante no encontrado:", participant_not_found)
 

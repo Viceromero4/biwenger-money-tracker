@@ -7,6 +7,7 @@ from app.models.movement import (
     MovementType,
 )
 
+
 def create_movement(
     db: Session,
     *,
@@ -18,6 +19,7 @@ def create_movement(
     occurred_at,
     operation_type: MovementOperationType | None = None,
     external_key: str | None = None,
+    round_number: int | None = None,
 ) -> Movement:
     movement = Movement(
         league_participant_id=league_participant.id,
@@ -27,12 +29,14 @@ def create_movement(
         player_name=player_name,
         description=description,
         external_key=external_key,
+        round_number=round_number,
         occurred_at=occurred_at,
     )
 
     db.add(movement)
 
     return movement
+
 
 def create_player_transfer(
     db: Session,
@@ -68,6 +72,7 @@ def create_player_transfer(
     )
 
     return buyer_movement, seller_movement
+
 
 def create_bonus(
     db: Session,
