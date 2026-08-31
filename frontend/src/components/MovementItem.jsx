@@ -34,6 +34,12 @@ function MovementItem({ movement, participants }) {
         : `Cesión realizada${player}`
     }
 
+    if (movement.operation_type === 'loan_return') {
+      return movement.type === 'sale'
+        ? `Devolución de cesión recibida${player}`
+        : `Devolución de cesión realizada${player}`
+    }
+
     switch (movement.type) {
       case 'purchase':
         return `Compra${player}`

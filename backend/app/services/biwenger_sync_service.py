@@ -285,12 +285,22 @@ def sync_movements(db: Session, league_id: int):
                 from_type = MovementType.SALE
                 to_type = MovementType.PURCHASE
 
-            if parsed["operation_type"] not in ["clause", "loan"]:
+            if parsed["operation_type"] == "loan_return":
+                from_amount = parsed["amount"]
+                to_amount = -parsed["amount"]
+
+                from_type = MovementType.SALE
+                to_type = MovementType.PURCHASE
+
+            if parsed["operation_type"] not in [
+                "clause",
+                "loan",
+                "loan_return",
+            ]:
                 continue
 
             from_external_key = parsed["seller_external_key"]
             to_external_key = parsed["buyer_external_key"]
-
             # -------------------------------------------------
             # MOVIMIENTO FROM
             # -------------------------------------------------

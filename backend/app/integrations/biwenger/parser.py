@@ -53,6 +53,7 @@ def parse_board_events(events, league_biwenger_id: int):
             "bonus",
             "clauseIncrement",
             "loan",
+            "loanReturn",
             "roundFinished",
         ]:
             continue
@@ -229,6 +230,48 @@ def parse_board_events(events, league_biwenger_id: int):
                         "buyer_external_key": borrower_external_key,
                     }
                 )
+                        # DEVOLUCIÓN DE CESIÓN
+            elif event["type"] == "loanReturn":
+                from_participant = movement["from"]
+                to_participant = movement["to"]
+                refund = movement["refund"]
+
+                from_external_key = generate_external_key(
+                    league_biwenger_id=league_biwenger_id,
+                    event_type=event["type"],
+                    date=event["date"],
+                    player_biwenger_id=movement["player"],
+                    participant_biwenger_id=from_participant["id"],
+                    amount=refund,
+                    role="from",
+                )
+
+                to_external_key = generate_external_key(
+                    league_biwenger_id=league_biwenger_id,
+                    event_type=event["type"],
+                    date=event["date"],
+                    player_biwenger_id=movement["player"],
+                    participant_biwenger_id=to_participant["id"],
+                    amount=-refund,
+                    role="to",
+                )
+
+                parsed_movements.append(
+                    {
+                        "movement_type": "participant_operation",
+                        "operation_type": "loan_return",
+                        "from_biwenger_id": from_participant["id"],
+                        "from_name": from_participant["name"],
+                        "to_biwenger_id": to_participant["id"],
+                        "to_name": to_participant["name"],
+                        "player_biwenger_id": movement["player"],
+                        "amount": refund,
+                        "rounds": movement.get("rounds"),
+                        "date": event["date"],
+                        "seller_external_key": from_external_key,
+                        "buyer_external_key": to_external_key,
+                    }
+                )    
 
             # TRANSFERENCIAS / VENTAS / CLÁUSULAS
             elif event["type"] == "transfer":

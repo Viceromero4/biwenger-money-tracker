@@ -29,6 +29,7 @@ class MovementOperationType(str, Enum):
     CLAUSE = "clause"
     PARTICIPANT_TRANSFER = "participant_transfer"
     LOAN = "loan"
+    LOAN_RETURN = "loan_return"
 
 
 class Movement(Base):

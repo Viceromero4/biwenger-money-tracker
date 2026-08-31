@@ -9,7 +9,10 @@ from app.schemas.league import (
     LeagueResponse,
     LeagueUpdateBiwenger,
 )
-
+from app.services.biwenger_sync_service import (
+    sync_movements,
+    sync_participants,
+)
 
 router = APIRouter(
     prefix="/leagues",
@@ -81,3 +84,74 @@ def update_biwenger_league_id(
     db.refresh(league)
 
     return league
+
+@router.post(
+    "/{league_id}/sync",
+)
+def sync_league(
+    league_id: int,
+    db: Session = Depends(get_db),
+):
+    league = db.get(League, league_id)
+
+    if league is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="League not found",
+        )
+
+    try:
+        participant_results = sync_participants(
+            db=db,
+            league_id=league_id,
+        )
+
+        movement_results = sync_movements(
+            db=db,
+            league_id=league_id,
+        )
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(error),
+        )
+
+    participants_created = sum(
+        1
+        for result in participant_results
+        if result["action"] == "created"
+    )
+
+    movements_created = sum(
+        1
+        for result in movement_results
+        if result["action"] == "created"
+    )
+
+    movements_updated = sum(
+        1
+        for result in movement_results
+        if result["action"] == "updated"
+    )
+
+    movements_existing = sum(
+        1
+        for result in movement_results
+        if result["action"] == "already_exists"
+    )
+
+    participants_not_found = sum(
+        1
+        for result in movement_results
+        if result["action"] == "participant_not_found"
+    )
+
+    return {
+        "league_id": league_id,
+        "participants_created": participants_created,
+        "movements_created": movements_created,
+        "movements_updated": movements_updated,
+        "movements_existing": movements_existing,
+        "participants_not_found": participants_not_found,
+    }

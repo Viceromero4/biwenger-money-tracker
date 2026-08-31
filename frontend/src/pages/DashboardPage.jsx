@@ -6,6 +6,7 @@ import { getLeagueMovements } from '../services/movementService.js'
 import MovementItem from '../components/MovementItem.jsx'
 import { useLeague } from '../context/LeagueContext.jsx'
 import { formatCurrency } from '../utils/formatCurrency.js'
+import { syncLeague } from '../services/syncService.js'
 
 
 function DashboardPage() {
@@ -14,6 +15,8 @@ function DashboardPage() {
   const [error, setError] = useState(null)
   const [movements, setMovements] = useState([])
   const { selectedLeagueId } = useLeague()
+  const [syncing, setSyncing] = useState(false)
+  const [syncMessage, setSyncMessage] = useState(null)
 
   useEffect(() => {
     async function loadDashboard() {
@@ -47,6 +50,29 @@ function DashboardPage() {
 
 const latestMovements = movements.slice(0, 5)
 
+async function handleSync() {
+  try {
+    setSyncing(true)
+    setSyncMessage(null)
+
+    const result = await syncLeague(selectedLeagueId)
+
+    const dashboardData = await getLeagueDashboard(selectedLeagueId)
+    const movementsData = await getLeagueMovements(selectedLeagueId)
+
+    setDashboard(dashboardData)
+    setMovements(movementsData)
+
+    setSyncMessage(
+      `Sincronización completada · ${result.movements_created} nuevos · ${result.movements_updated} actualizados`
+    )
+  } catch (error) {
+    setSyncMessage(`Error: ${error.message}`)
+  } finally {
+    setSyncing(false)
+  }
+}
+
 return (
   <main className="dashboard">
   <header className="dashboard-header">
@@ -70,6 +96,23 @@ return (
         <span>Participantes</span>
         <strong>{dashboard.participants.length}</strong>
       </div>
+    </div>
+
+    <div className="dashboard-sync">
+      <button
+        type="button"
+        onClick={handleSync}
+        disabled={syncing}
+        className="sync-button"
+      >
+        {syncing ? 'Sincronizando...' : '↻ Sincronizar Biwenger'}
+      </button>
+
+      {syncMessage && (
+        <small className="sync-message">
+          {syncMessage}
+        </small>
+      )}
     </div>
   </header>
 
