@@ -234,7 +234,10 @@ def parse_board_events(events, league_biwenger_id: int):
             elif event["type"] == "loanReturn":
                 from_participant = movement["from"]
                 to_participant = movement["to"]
-                refund = movement["refund"]
+                refund = movement.get("refund")
+
+                if refund is None:
+                    continue
 
                 from_external_key = generate_external_key(
                     league_biwenger_id=league_biwenger_id,

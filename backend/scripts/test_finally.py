@@ -9,7 +9,7 @@ from app.models.league import League
 db = SessionLocal()
 
 try:
-    league = db.get(League, 2)
+    league = db.get(League, 1)
 
     client = BiwengerClient(
         league_id=league.biwenger_league_id,
@@ -31,9 +31,7 @@ try:
             break
 
         for event in events:
-            event_json = json.dumps(event)
-
-            if "8747" in event_json:
+            if event["type"] == "loanReturn":
                 found_events.append(event)
 
         if len(events) < limit:
@@ -42,7 +40,7 @@ try:
         offset += limit
 
     print("=" * 60)
-    print("EVENTOS DEL JUGADOR 8747")
+    print("LOAN RETURNS DE PURIBET")
     print("=" * 60)
 
     for event in found_events:
@@ -52,7 +50,6 @@ try:
         )
 
         print()
-        print("TIPO:", event["type"])
         print("FECHA:", event_date)
         print(json.dumps(event, indent=2, ensure_ascii=False))
         print("-" * 60)
